@@ -7,15 +7,15 @@
   const $=selector=>document.querySelector(selector);
   const escape=value=>String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
   const field=(path,value,tag='span',cls='')=>`<${tag} class="${cls}" data-field="${path}">${escape(value)}</${tag}>`;
-  const heading=(number,title)=>`<div class="section-label">${number}</div><h2>${title}</h2>`;
+  const heading=(number,title)=>`<div class="section-heading"><span class="section-label">${number}</span><h2>${title}</h2></div>`;
   function gallery(group){return `<div class="demo-layout"><div class="player-shell"><video id="video-${group}" controls playsinline preload="none"></video><div class="player-toolbar"><span id="video-label-${group}"></span><button type="button" data-next="${group}">下一段 →</button></div></div><div id="playlist-${group}" class="playlist"></div></div>`;}
   function render(){
     $('#report').innerHTML=`
-    <section id="review">${heading('01','上周回顾')}<div class="review-list">${data.review.map((v,i)=>field(`review.${i}`,v,'p')).join('')}</div><div class="carry"><h3>遗留任务</h3>${field('pending',data.pending,'p')}</div></section>
-    <section id="training">${heading('02','本周 · 模型训练')}${field('training',data.training,'p','lead')}<div class="training-layout"><div class="chart-card"><div class="chart-heading">${field('developmentTitle',data.developmentTitle,'strong')}${field('developmentMetric',data.developmentMetric)}</div>${data.trainingRows.map((r,i)=>`<div class="bar-row"><div class="bar-label">${field(`trainingRows.${i}.label`,r.label)}<strong>${r.value.toFixed(1)}</strong></div><div class="bar-track"><div class="bar-fill" style="width:${Math.min(100,r.value/25*100)}%"></div></div></div>`).join('')}</div><div class="metric-list">${data.testResults.map((r,i)=>`<article class="metric">${field(`testResults.${i}.dataset`,r.dataset,'h3')}${field(`testResults.${i}.value`,r.value,'div','metric-value')}${field(`testResults.${i}.metric`,r.metric,'p','metric-label')}</article>`).join('')}</div></div></section>
-    <section id="comparison" class="video-section">${heading('03','对比方法')}${gallery('comparison')}</section>
-    <section id="quest" class="video-section">${heading('04','Quest 调试')}${gallery('quest')}</section>
-    <section id="next">${heading('05','下周计划')}${field('next',data.next,'p','next-focus')}</section>`;
+    <section id="review">${heading('01','上周回顾')}<div class="recap-grid">${data.review.map((v,i)=>`<article class="recap-card"><div class="topic-art ${i?'capture-art':'model-art'}" aria-hidden="true"><i></i><i></i><i></i></div>${field(`review.${i}`,v,'p')}</article>`).join('')}<article class="recap-card pending-card"><h3>遗留任务</h3>${field('pending',data.pending,'p')}</article></div></section>
+    <section id="quest" class="video-section">${heading('02','Quest 调试')}${gallery('quest')}</section>
+    <section id="training">${heading('03','本周 · 模型训练')}${field('training',data.training,'p','lead')}<div class="training-layout"><div class="chart-card"><div class="chart-heading">${field('developmentTitle',data.developmentTitle,'strong')}${field('developmentMetric',data.developmentMetric)}</div>${data.trainingRows.map((r,i)=>`<div class="bar-row"><div class="bar-label">${field(`trainingRows.${i}.label`,r.label)}<strong>${r.value.toFixed(1)}</strong></div><div class="bar-track"><div class="bar-fill" style="width:${Math.min(100,r.value/25*100)}%"></div></div></div>`).join('')}</div><div class="metric-list">${data.testResults.map((r,i)=>`<article class="metric">${field(`testResults.${i}.dataset`,r.dataset,'h3')}${field(`testResults.${i}.value`,r.value,'div','metric-value')}${field(`testResults.${i}.metric`,r.metric,'p','metric-label')}</article>`).join('')}</div></div></section>
+    <section id="comparison" class="video-section">${heading('04','对比方法')}${gallery('comparison')}</section>
+    <section id="next">${heading('05','下周计划')}<div class="next-card"><div class="calibration-art" aria-hidden="true"><span></span></div>${field('next',data.next,'p','next-focus')}</div></section>`;
     $('.sidebar-date').textContent=data.date;
     Object.keys(selected).forEach(group=>selectVideo(group,selected[group]));
     document.querySelectorAll('[data-next]').forEach(b=>b.onclick=()=>selectVideo(b.dataset.next,(selected[b.dataset.next]+1)%data.groups[b.dataset.next].length));
@@ -39,8 +39,19 @@
   $('#export').onclick=()=>{const blob=new Blob(['window.REPORT = '+JSON.stringify(data,null,2)+';\n'],{type:'text/javascript;charset=utf-8'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='content.js';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);toast('替换 content.js 并重新发布即可更新网站。');};
   let resetArmed=false,resetTimer;
   $('#reset').onclick=()=>{if(!resetArmed){resetArmed=true;$('#reset').textContent='确认恢复';resetTimer=setTimeout(()=>{resetArmed=false;$('#reset').textContent='恢复文件版本';},4000);return;}clearTimeout(resetTimer);resetArmed=false;$('#reset').textContent='恢复文件版本';try{localStorage.removeItem(storageKey);}catch(_){}data=structuredClone(original);draft=false;selected.comparison=0;selected.quest=0;render();};
-  let observer;
-  function observeSections(){observer?.disconnect();observer=new IntersectionObserver(entries=>{for(const entry of entries){if(!entry.isIntersecting)continue;activeSection=[...document.querySelectorAll('main section')].indexOf(entry.target);document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${entry.target.id}`));$('#page-count').textContent=`${activeSection+1} / 5`;}},{rootMargin:'-10% 0px -65% 0px',threshold:0});document.querySelectorAll('main section').forEach(s=>observer.observe(s));}
+  let scrollFrame=0;
+  function updateActiveSection(){
+    const sections=[...document.querySelectorAll('main section')];
+    const threshold=document.body.classList.contains('presenting')?70:190;
+    activeSection=0;
+    sections.forEach((section,i)=>{if(section.getBoundingClientRect().top<=threshold)activeSection=i;});
+    if(window.scrollY>0&&window.innerHeight+window.scrollY>=document.documentElement.scrollHeight-4)activeSection=sections.length-1;
+    document.querySelectorAll('.sidebar nav a').forEach(a=>a.classList.toggle('active',a.getAttribute('href')===`#${sections[activeSection].id}`));
+    $('#page-count').textContent=`${activeSection+1} / ${sections.length}`;
+  }
+  function observeSections(){updateActiveSection();}
+  window.addEventListener('scroll',()=>{cancelAnimationFrame(scrollFrame);scrollFrame=requestAnimationFrame(updateActiveSection);},{passive:true});
+  window.addEventListener('resize',updateActiveSection);
   function moveSection(delta){const sections=[...document.querySelectorAll('main section')];activeSection=Math.max(0,Math.min(sections.length-1,activeSection+delta));sections[activeSection].scrollIntoView({behavior:'smooth'});}
   function presentation(on){document.body.classList.toggle('presenting',on);$('.presentation-controls').hidden=!on;editing=false;syncEditor();document.querySelectorAll('main section')[activeSection].scrollIntoView();}
   $('#present').onclick=()=>presentation(true);$('#exit-present').onclick=()=>presentation(false);$('#previous').onclick=()=>moveSection(-1);$('#following').onclick=()=>moveSection(1);
