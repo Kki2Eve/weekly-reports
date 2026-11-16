@@ -4,19 +4,21 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <meta name="theme-color" content="#f7f8f5">
-  <meta name="description" content="手部三维重建与 Quest 数据采集进展汇报">
-  <title>周末汇报</title>
-  <link rel="stylesheet" href="styles.css?v=4">
-  <script defer src="content.js?v=4"></script>
-  <script defer src="app.js?v=4"></script>
+  <meta name="theme-color" content="#f4f5f7">
+  <meta name="description" content="每周工作汇报与成果展示">
+  <title>工作汇报</title>
+  <link rel="stylesheet" href="assets/archive.css?v=1">
+  <script defer src="reports.js"></script>
+  <script defer src="assets/archive.js?v=1"></script>
 </head>
 <body>
-  <header class="topbar"><a href="#review" class="brand">周末汇报</a><div class="tools"><span id="draft-state" hidden>本机草稿 · 未发布</span><button id="edit-toggle" type="button">编辑内容</button><button id="export" type="button" hidden>导出修改</button><button id="reset" type="button" hidden>恢复文件版本</button><button id="present" type="button" class="primary">演示模式</button></div></header>
-  <aside class="sidebar"><nav aria-label="汇报章节"><a href="#review"><span>01</span>上周回顾</a><a href="#training"><span>02</span>模型训练</a><a href="#quest"><span>03</span>Quest 调试</a><a href="#comparison"><span>04</span>对比方法</a><a href="#next"><span>05</span>下周计划</a></nav><p class="sidebar-date"></p></aside>
-  <main id="report"></main>
-  <div class="presentation-controls" hidden><button id="previous" aria-label="上一章节">←</button><span id="page-count"></span><button id="following" aria-label="下一章节">→</button><button id="exit-present">退出演示</button></div>
-  <div id="toast" role="status" aria-live="polite"></div>
-  <noscript>请启用 JavaScript 查看汇报内容。</noscript>
+  <header><a class="brand" href="./"><span class="brand-mark" aria-hidden="true"></span>工作汇报</a><span class="header-note">每周进展 · 成果展示</span></header>
+  <main>
+    <div class="intro"><div><p class="eyebrow">每周记录</p><h1>工作汇报</h1></div><span id="report-count"></span></div>
+    <section id="latest" aria-label="最新汇报"></section>
+    <div class="archive-heading"><h2>全部汇报</h2><label><span class="sr-only">搜索汇报</span><input id="search" type="search" placeholder="搜索日期、内容" autocomplete="off"></label></div>
+    <div id="archive"></div><p id="empty" hidden>没有匹配的汇报</p>
+  </main>
+  <noscript>请启用 JavaScript 查看汇报目录。</noscript>
 </body>
 </html>

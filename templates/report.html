@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>工作汇报</title>
+  <link rel="stylesheet" href="../../assets/report.css?v=1">
+  <link rel="stylesheet" href="../../assets/weekly.css?v=1">
+  <script defer src="content.js"></script>
+  <script defer src="../../assets/report.js?v=1"></script>
+</head>
+<body>
+  <header class="topbar"><a class="brand" href="../../">工作汇报</a><div class="tools"><span id="draft-state" hidden>本机草稿 · 未发布</span><button id="edit-toggle">编辑内容</button><button id="export" hidden>导出修改</button><button id="reset" hidden>恢复文件版本</button><button id="present" class="primary">演示模式</button></div></header>
+  <aside class="sidebar"><nav aria-label="汇报章节"></nav><p class="sidebar-date"></p></aside>
+  <main id="report"></main>
+  <div class="presentation-controls" hidden><button id="previous" aria-label="上一章节">←</button><span id="page-count"></span><button id="following" aria-label="下一章节">→</button><button id="exit-present">退出演示</button></div>
+  <div id="toast" role="status" aria-live="polite"></div>
+  <noscript>请启用 JavaScript 查看汇报内容。</noscript>
+</body>
+</html>

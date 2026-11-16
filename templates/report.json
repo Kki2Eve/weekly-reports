@@ -1,0 +1,13 @@
+{
+  "date": "2000-01-01",
+  "title": "本周工作汇报",
+  "summary": "",
+  "tags": [],
+  "layout": "standard",
+  "sections": [
+    { "id": "review", "title": "上周回顾", "blocks": [{ "type": "bullets", "items": [] }] },
+    { "id": "progress", "title": "本周工作", "blocks": [{ "type": "text", "text": "" }] },
+    { "id": "demo", "title": "成果展示", "blocks": [] },
+    { "id": "next", "title": "下周计划", "blocks": [{ "type": "bullets", "items": [] }] }
+  ]
+}
