@@ -13,7 +13,12 @@ try {
         & git commit -m $Message
         if ($LASTEXITCODE -ne 0) { throw 'Git commit failed.' }
     } elseif ($LASTEXITCODE -ne 0) { throw 'Git diff failed.' }
-    & git -c 'core.sshCommand=ssh -o BatchMode=yes -o ConnectTimeout=15' push origin main
+    $pushUrl = & git remote get-url --push origin
+    if ($LASTEXITCODE -ne 0) { throw 'Cannot read origin remote.' }
+    if ($pushUrl -like 'https://github.com/*') {
+        $pushUrl = $pushUrl -replace '^https://github.com/', 'git@github.com:'
+    }
+    & git -c 'core.sshCommand=ssh -o BatchMode=yes -o ConnectTimeout=15' push $pushUrl main
     if ($LASTEXITCODE -ne 0) { throw 'Git push failed. Local commit has been retained.' }
     Write-Host 'Source pushed. GitHub Pages will update after its build finishes.'
     Write-Host 'https://kki2eve.github.io/quest-weekend-report-20261114/'
