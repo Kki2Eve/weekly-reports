@@ -21,5 +21,5 @@ try {
     & git -c 'core.sshCommand=ssh -o BatchMode=yes -o ConnectTimeout=15' push $pushUrl main
     if ($LASTEXITCODE -ne 0) { throw 'Git push failed. Local commit has been retained.' }
     Write-Host 'Source pushed. GitHub Pages will update after its build finishes.'
-    Write-Host 'https://kki2eve.github.io/quest-weekend-report-20261114/'
+    Write-Host 'https://kki2eve.github.io/weekly-reports/'
 } finally { Pop-Location }

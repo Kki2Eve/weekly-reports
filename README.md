@@ -1,6 +1,6 @@
 # 工作汇报
 
-[汇报首页](https://kki2eve.github.io/quest-weekend-report-20261114/) · [2026-11-14 汇报](https://kki2eve.github.io/quest-weekend-report-20261114/reports/2026-11-14/)
+[汇报首页](https://kki2eve.github.io/weekly-reports/) · [2026-11-14 汇报](https://kki2eve.github.io/weekly-reports/reports/2026-11-14/)
 
 每周独立页面，按日期归档。纯 HTML / CSS / JavaScript，Node.js 18+ 即可维护，不需要 npm install。
 
@@ -74,7 +74,7 @@ scripts/                    # 新建、生成、检查、预览和发布
 
 ## 发布与访问
 
-继续使用原仓库名，以保留已有首页链接。GitHub Pages 从 `main` 分支根目录发布；每周也有可单独分享的固定链接 `reports/YYYY-MM-DD/`。
+仓库名为 `weekly-reports`，统一归档每周工作汇报。GitHub Pages 从 `main` 分支根目录发布；每周也有可单独分享的固定链接 `reports/YYYY-MM-DD/`。
 
 `scripts/publish.ps1` 使用当前仓库的 Git 远程地址及现有 SSH 登录。其他电脑先克隆仓库、配置 GitHub SSH，再执行相同命令。
 
